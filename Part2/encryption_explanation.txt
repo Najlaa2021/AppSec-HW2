@@ -1,0 +1,19 @@
+Part 2: Database Encryption Process
+
+To fortify the database's security, I made use of the encryption capabilities embedded in the django cryptography plugin. Specifically, my focus was on encrypting the card data field, recognizing it as the only sensitive element within the database.
+
+Upon scrutinizing the structure of the Card() class within the models.py file, I identified the necessity to secure the data field due to its susceptibility to the top 10 OWASP attacks. To address this vulnerability, I applied the encryption function to line 40, ensuring the data field's encryption.
+
+Following this encryption process, the regeneration of the database became imperative. I adhered to the provided commands in the assignment instructions:
+
+
+python3 manage.py makemigrations LegacySite
+python3 manage.py makemigrations
+python3 manage.py migrate
+
+In order to optimize key management practices, I delved into the settings.py file to locate the definition of the secret key. Researching solutions online led me to the Django-environ module. After installing the module using the command pip install django-environ, I incorporated the recommended code into lines 25-29 in the settings.py file. Following the documentation, I securely stored the secret key in a .env file located in the same directory as settings.py. This approach, facilitated by creating an environment, provides a secure method for managing keys, keeping them in a separate and protected file.
+
+
+
+
+
